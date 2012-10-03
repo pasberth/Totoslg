@@ -1,0 +1,28 @@
+#!/usr/bin/env ruby
+
+require 'yaml'
+require 'fileutils'
+require 'totoslg'
+
+FileUtils.mkdir_p File.expand_path("~/.totoslg")
+
+Dir.chdir(File.dirname(__FILE__))
+config = YAML.load_file("../db/config.yml")
+config['database'] = File.expand_path(config['database']) if config['database']
+ActiveRecord::Base.establish_connection(config)
+
+screen = ConsoleWindow::Screen.new
+game   = screen.create_sub(Totoslg::Window, 80, 20, 0, 0)
+dbg    = screen.create_sub(Totoslg::Window, 80, 20, 0, 20)
+$stdout = dbg.out
+game.focus!
+
+screen.components << game << dbg
+begin
+  screen.activate
+rescue Object => e
+  $stdout = STDOUT
+  puts "debug: ", dbg.as_string
+  p screen
+  raise e
+end

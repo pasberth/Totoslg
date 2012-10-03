@@ -1,0 +1,9 @@
+[submodule "ConsoleWindow"]
+	path = ConsoleWindow
+	url = git://github.com/pasberth/ConsoleWindow.git
+[submodule "ConsoleBoard"]
+	path = ConsoleBoard
+	url = git://github.com/pasberth/ConsoleBoard.git
+[submodule "GamePencil"]
+	path = GamePencil
+	url = git://github.com/pasberth/GamePencil.git

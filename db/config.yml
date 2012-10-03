@@ -1,0 +1,4 @@
+# -*- yml -*-
+
+adapter: sqlite3
+database: ~/.totoslg/totoslg.db
