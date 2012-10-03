@@ -27,6 +27,13 @@ How to run
 
   bundle install --path .bundle
 
+Totoslg はいろいろなデータを ~/.totoslg/totoslg.db に保存しようとします。  
+最初に db ファイルを作り、データを書き込む必要があります。
+
+.. code::
+
+  bundle exec rake db:migrate
+  bundle exdc rake db:update
 
 これまで特にエラーとかなくインストールが成功すれば、たぶん Totoslg は動作するはずです！
 
@@ -37,3 +44,12 @@ Totoslg を走らせるには bundle コマンドを使用します。
   bundle exec totoslg
 
 操作方法などは doc/ をご覧くだしあ。
+
+Do you want to create a new map?
+=================================
+
+db/update.rb を読んでみて！　Totoslg はマップやキャラクターやらのデータを db/data/**/*.rb に置いています。
+これは通常実行されませんが rake db:updare で実行されデータを追加できます。
+このファイルをいじれば簡単にマップを作成できます。
+
+どうやって書けばいいかはあとで書くよ！　ちょっと待ってね。
