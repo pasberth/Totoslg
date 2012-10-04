@@ -328,10 +328,12 @@ DOC
 
     def ai_movement_phase player
       player.ai_enumerate_movement do |(x1, y1), (x2, y2)|
-        @board.table[x1, y1].unit.reload
-        @board.table[x2, y2].unit = @board.table[x1, y1].unit
-        @board.table[x1, y1].unit = nil
-        @board.table.modified(x1, y1)
+        if [x1, y1] != [x2, y2]
+          @board.table[x1, y1].unit.reload
+          @board.table[x2, y2].unit = @board.table[x1, y1].unit
+          @board.table[x1, y1].unit = nil
+          @board.table.modified(x1, y1)
+        end
         @board.table.modified(x2, y2)
       end
 
@@ -354,8 +356,8 @@ DOC
           if u.damage >= u.unit_type.toughness
             @board.table[u.x, u.y].unit = nil
             u.destroy
-            @stage.units.reset
-            u.player.units.reset
+            @stage.units.reload
+            u.player.units.reload
           else
             u.refresh_attack_range_points!
             u.refresh_movement_points!
