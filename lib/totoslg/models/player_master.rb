@@ -22,6 +22,10 @@ class Totoslg::Models::PlayerMaster < ActiveRecord::Base
     player
   end
 
+  def _create_input_type input_type
+    [:input_type, input_type]
+  end
+
   def _create_units units
 
     units.each_with_index do |unit, i|

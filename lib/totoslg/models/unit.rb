@@ -46,6 +46,7 @@ class Totoslg::Models::Unit < ActiveRecord::Base
   def each_attack_range_points direction=self.direction, &block
     return enum_for(:each_attack_range_points, direction) unless block_given?
 
+    enumerated = []
     GamePencil::Pencil::ScoreMap.new do |x, y|
       next 0 if x == 3 and y == 3
       next if x < 0 or y < 0
@@ -59,6 +60,8 @@ class Totoslg::Models::Unit < ActiveRecord::Base
       limit_score(4).
       each do |root|
         root.each do |(x, y), score|
+          next if enumerated.include?([x, y])
+          enumerated << [x, y]
           yield [self.x + x - 3, self.y + y - 3], score
         end
     end
@@ -66,6 +69,8 @@ class Totoslg::Models::Unit < ActiveRecord::Base
 
   def each_movement_points direction=self.direction, &block
     return enum_for(:each_movement_points, direction) unless block_given?
+
+    enumerated = []
 
     GamePencil::Pencil::ScoreMap.new do |x, y; fixed_x, fixed_y|
       next 0 if x == 3 and y == 3
@@ -83,6 +88,8 @@ class Totoslg::Models::Unit < ActiveRecord::Base
       limit_score(4).
       each do |root|
         root.each do |(x, y), score|
+          next if enumerated.include?([x, y])
+          enumerated << [x, y]
           yield [self.x + x - 3, self.y + y - 3], score
         end
       end

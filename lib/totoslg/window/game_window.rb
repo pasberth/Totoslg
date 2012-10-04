@@ -59,6 +59,9 @@ module Totoslg
       frames.on :shifting_phase, &method(:shifting_phase)
       frames.on :movement_phase, &method(:movement_phase)
       frames.on :combat_phase, &method(:combat_phase)
+      frames.on :ai_shifting_phase, &method(:ai_shifting_phase)
+      frames.on :ai_movement_phase, &method(:ai_movement_phase)
+      frames.on :ai_combat_phase, &method(:ai_combat_phase)
 
       @board.frames.override :select, &method(:select)
 
@@ -315,6 +318,32 @@ DOC
       end
     end
 
+    def ai_shifting_phase player
+      player.ai_enumerate_shifting do |(x, y), dir|
+        @board.table.modified(x, y)
+      end
+
+      unfocus! :ai_shifting_phase
+    end
+
+    def ai_movement_phase player
+      player.ai_enumerate_movement do |(x1, y1), (x2, y2)|
+        @board.table[x1, y1].unit.reload
+        @board.table[x2, y2].unit = @board.table[x1, y1].unit
+        @board.table[x1, y1].unit = nil
+        @board.table.modified(x1, y1)
+        @board.table.modified(x2, y2)
+      end
+
+      unfocus! :ai_movement_phase
+    end
+
+    def ai_combat_phase player
+      player.ai_enumerate_combat do |(x1, y1), (x2, y2)|
+      end
+      unfocus! :ai_combat_phase
+    end
+
     def play
 
       @stage.players.each do |plr|
@@ -345,7 +374,12 @@ DOC
 
         @stage.phase = Totoslg::Models::Stage::Phase::SHIFTING_PHASE
         @stage.save!
-        focus! :shifting_phase, plr
+
+        if plr.master.input_type == "user"
+          focus! :shifting_phase, plr
+        elsif plr.master.input_type == "ai"
+          focus! :ai_shifting_phase, plr
+        end
       end
 
       @stage.players.each do |plr|
@@ -356,7 +390,12 @@ DOC
 
         @stage.phase = Totoslg::Models::Stage::Phase::MOVEMENT_PHASE
         @stage.save!
-        focus! :movement_phase, plr
+
+        if plr.master.input_type == "user"
+          focus! :movement_phase, plr
+        elsif plr.master.input_type == "ai"
+          focus! :ai_movement_phase, plr
+        end
       end
 
       @stage.players.each do |plr|
@@ -367,7 +406,12 @@ DOC
 
         @stage.phase = Totoslg::Models::Stage::Phase::COMBAT_PHASE
         @stage.save!
-        focus! :combat_phase, plr
+
+        if plr.master.input_type == "user"
+          focus! :combat_phase, plr
+        elsif plr.master.input_type == "ai"
+          focus! :ai_combat_phase, plr
+        end
       end
     end
 
