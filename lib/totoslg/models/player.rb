@@ -19,6 +19,9 @@ class Totoslg::Models::Player < ActiveRecord::Base
       u.refresh_movement_points!
       u.refresh_attack_range_points!
 
+
+      # 攻撃範囲に敵がいるなら攻撃を優先 (移動しない)
+      next if u.attack_range_points.any?{|(x,y),_| stage.units.find(:first, conditions: ["x = ? AND y = ? AND not player_id = ?", x, y, self.id]) }
       # いちばん近い敵ユニットを探す
       enemy = stage.units.find(:all, conditions: ["not player_id = ?", self.id]).
         sort_by { |enemy| (u.x - enemy.x).abs ** 2 + (u.y - enemy.y).abs ** 2 }.first
