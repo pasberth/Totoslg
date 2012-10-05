@@ -1,8 +1,7 @@
 #!/usr/bin/env ruby
 
 # require 'tasks/standalone_migrations'
-require File.dirname(__FILE__) + '/core/boot'
-FileUtils.chdir(File.dirname(__FILE__))
+require 'totoslg/boot'
 
 task :shell do
   require 'pry'

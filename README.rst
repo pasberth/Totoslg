@@ -7,7 +7,7 @@ How to run
 
 最初に一度だけセットアップをする必要があります。
 
-.. code::
+.. code:: sh
 
   git clone git://github.com/pasberth/Totoslg.git
   cd Totoslg
@@ -20,26 +20,27 @@ How to run
   cd TextDisplay/ext/text_display/ext
   ruby extconf.rb
   make
+  cd ../../../../..
 
 次に Totoslg ディレクトリまで戻って、依存したモジュールを bundle でインストールしてください。
 
-.. code::
+.. code:: sh
 
   bundle install --path .bundle
 
 Totoslg はいろいろなデータを ~/.totoslg/totoslg.db に保存しようとします。  
 最初に db ファイルを作り、データを書き込む必要があります。
 
-.. code::
+.. code:: sh
 
   bundle exec rake db:migrate
-  bundle exdc rake db:update
+  bundle exec rake db:update
 
 これまで特にエラーとかなくインストールが成功すれば、たぶん Totoslg は動作するはずです！
 
 Totoslg を走らせるには bundle コマンドを使用します。
 
-.. code::
+.. code:: sh
 
   bundle exec totoslg
 
