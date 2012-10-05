@@ -1,0 +1,20 @@
+diff --git lib/console_window/container.rb lib/console_window/container.rb
+index 5b2a3bd..a9f6307 100644
+--- lib/console_window/container.rb
++++ lib/console_window/container.rb
+@@ -19,8 +19,13 @@ module ConsoleWindow
+ 
+     def displayed_text
+       text = self.text.instance_variable_get(:@text).clone
+-      components.each do |comp|
+-        text.paste!(comp.displayed_text, comp.x, comp.y)
++      # Avoid the bug
++      if text.is_a? TextDisplay::Text
++        components.each do |comp|
++          text.paste!(comp.displayed_text, comp.x, comp.y)
++        end
++      else
++        p text
+       end
+       Window::Text.new(self, text).displayed_text
+     end
