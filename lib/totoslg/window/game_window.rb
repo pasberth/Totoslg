@@ -356,26 +356,20 @@ DOC
 
     def play
 
-      @stage.units.reload
-      @stage.players.each do |plr|
-
-        plr.units.reload
-        @stage.active_player = plr
-        @stage.save!
-        @stage.units.each do |u|
-          if u.damage >= u.unit_type.toughness
-            @board.table[u.x, u.y].unit = nil
-            u.destroy
-          else
-            u.refresh_attack_range_points!
-            u.refresh_movement_points!
-            u.untap = true
-            u.save!
-            @board.table[u.x, u.y].unit = u
-          end
-
-          @board.table.modified(u.x, u.y)
+      @stage.units.reload      
+      @stage.units.each do |u|
+        if u.damage >= u.unit_type.toughness
+          @board.table[u.x, u.y].unit = nil
+          u.destroy
+        else
+          u.refresh_attack_range_points!
+          u.refresh_movement_points!
+          u.untap = true
+          u.save!
+          @board.table[u.x, u.y].unit = u
         end
+
+        @board.table.modified(u.x, u.y)
       end
 
       @stage.players.each do |plr|
