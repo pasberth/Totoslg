@@ -240,7 +240,7 @@ DOC
 
         movement_points = unit.movement_points.map { |(x, y), score| [x, y] }
         show_range(x, y) do
-          key, move_x, move_y = @board.focus!(:select, ["\n", ' '])
+          key, move_x, move_y = @board.focus!(:select, ["\n", ' ', 'z'])
         end
 
         case key
@@ -258,6 +258,8 @@ DOC
             @info.text = Paint["It can't move here.", :black, :red]
             return
           end
+        when 'z'
+          return
         end
       end
     end
@@ -295,8 +297,10 @@ DOC
         attack_range_points = unit.attack_range_points.map { |(x, y), score| [x, y] }
 
         show_range(x, y) do
-          key, atk_x, atk_y = @board.focus!(:select, ["\n", ' '])
+          key, atk_x, atk_y = @board.focus!(:select, ["\n", ' ', 'z'])
         end
+
+        return if key == 'z'
 
         if not attack_range_points.include? [atk_x, atk_y] or @board.table[atk_x, atk_y].unit.nil?
           @view_mapinfo = false
