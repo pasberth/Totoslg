@@ -320,6 +320,7 @@ DOC
 
     def ai_shifting_phase player
       player.ai_enumerate_shifting do |(x, y), dir|
+        @board.table[x, y].unit.reload
         @board.table.modified(x, y)
       end
 

@@ -34,7 +34,7 @@ class Totoslg::Models::Unit < ActiveRecord::Base
     @movement_points[direction] ||= each_movement_points(direction).to_a
   end
 
-  def fix_point_with_direction x, y
+  def fix_point_with_direction x, y, direction = self.direction
     case direction
     when DIR_UP then [x, y]
     when DIR_DOWN then [(x - 6).abs, (y - 6).abs]
@@ -51,7 +51,7 @@ class Totoslg::Models::Unit < ActiveRecord::Base
       next 0 if x == 3 and y == 3
       next if x < 0 or y < 0
 
-      fixed_x, fixed_y = fix_point_with_direction(x, y)
+      fixed_x, fixed_y = fix_point_with_direction(x, y, direction)
       unit_type.attack_range[fixed_y] && unit_type.attack_range[fixed_y][fixed_x] or next
       unit_type.attack_range[fixed_y][fixed_x]
     end.
@@ -76,7 +76,7 @@ class Totoslg::Models::Unit < ActiveRecord::Base
       next 0 if x == 3 and y == 3
       next if x < 0 or y < 0
 
-      fixed_x, fixed_y = fix_point_with_direction(x, y)
+      fixed_x, fixed_y = fix_point_with_direction(x, y, direction)
 
       unit_type.movement[fixed_y] && unit_type.movement[fixed_y][fixed_x] or next
       stage.units.find(:first, conditions: { x: self.x + x - 3, y: self.y + y - 3 }) and next

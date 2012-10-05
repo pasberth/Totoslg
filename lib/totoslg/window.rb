@@ -18,7 +18,6 @@ module Totoslg
       @start_window.table.row(0).width = width
       @start_window.table.width = 1
       @start_window.table.height = Totoslg::Stage.all.length
-      @start_window.table[0, 0] = '*'
 
       frames.on :main do
         Totoslg::Stage.all.each_with_index do |stage, i|
