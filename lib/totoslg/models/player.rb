@@ -21,11 +21,11 @@ class Totoslg::Models::Player < ActiveRecord::Base
 
       # いちばん近い敵ユニットを探す
       enemy = stage.units.find(:all, conditions: ["not player_id = ?", self.id]).
-        sort_by { |enemy| (u.x - enemy.x).abs + (u.y - enemy.y).abs }.first
+        sort_by { |enemy| (u.x - enemy.x).abs ** 2 + (u.y - enemy.y).abs ** 2 }.first
             # 左方向
-      dir = if enemy.x - u.x  < 0
+      dir = if enemy.x < u.x
               # 上方向
-              if enemy.y - u.y < 0
+              if enemy.y < u.y
                 # 左上の方で、かつより左の方にいる場合
                 if (u.x - enemy.x).abs > (u.y - enemy.y).abs
                   Totoslg::Stage::DIR_LEFT
@@ -43,10 +43,9 @@ class Totoslg::Models::Player < ActiveRecord::Base
               
             else
               # 上方向
-              if enemy.y - u.y < 0
+              if enemy.y < u.y
                 if (u.x - enemy.x).abs > (u.y - enemy.y).abs
                   Totoslg::Stage::DIR_RIGHT
-                  # 左上のほうで、より上の方
                 else
                   Totoslg::Stage::DIR_UP
                 end
@@ -59,7 +58,7 @@ class Totoslg::Models::Player < ActiveRecord::Base
               end
             end
 
-      return if dir == u.direction
+      next if dir == u.direction
       u.untap = false
       u.direction = dir
       u.save!

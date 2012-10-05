@@ -322,6 +322,7 @@ DOC
       player.ai_enumerate_shifting do |(x, y), dir|
         @board.table[x, y].unit.reload
         @board.table.modified(x, y)
+        Fiber.yield
       end
 
       unfocus! :ai_shifting_phase
@@ -336,6 +337,7 @@ DOC
           @board.table.modified(x1, y1)
         end
         @board.table.modified(x2, y2)
+        Fiber.yield
       end
 
       unfocus! :ai_movement_phase
@@ -347,6 +349,7 @@ DOC
         @board.table[x2, y2].unit.reload
         @board.table.modified(x1, y1)
         @board.table.modified(x2, y2)        
+        Fiber.yield
       end
       unfocus! :ai_combat_phase
     end
