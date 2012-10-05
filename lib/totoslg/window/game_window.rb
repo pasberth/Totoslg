@@ -55,6 +55,7 @@ module Totoslg
       frames.on :main, &method(:main)
       frames.on :init, &method(:init)
       frames.on :play, &method(:play)
+      frames.on :game_set, &method(:game_set)
       frames.on :system_command, &method(:system_command)
       frames.on :shifting_phase, &method(:shifting_phase)
       frames.on :movement_phase, &method(:movement_phase)
@@ -71,6 +72,7 @@ module Totoslg
     def main stage
       focus! :init, stage
       focus! :play
+      unfocus!
     end
 
     def init stage
@@ -356,7 +358,8 @@ DOC
 
     def play
 
-      @stage.units.reload      
+      @stage.units.reload
+
       @stage.units.each do |u|
         if u.damage >= u.unit_type.toughness
           @board.table[u.x, u.y].unit = nil
@@ -370,6 +373,13 @@ DOC
         end
 
         @board.table.modified(u.x, u.y)
+      end
+
+      if @stage.players.any? { |plr| plr.units.reload; plr.units.empty? }
+        focus! :game_set
+        @cmd_line..getc
+        unfocus! :play
+        return
       end
 
       @stage.players.each do |plr|
@@ -419,6 +429,17 @@ DOC
           focus! :ai_combat_phase, plr
         end
       end
+    end
+
+    def game_set
+      @view_mapinfo = false
+      plrs = @stage.players.sort_by { |plr| -plr.units.count }
+      @info.text = <<-RESULT
+#{["\e[34m", "\e[31m"][plrs.first.master.number]}Player #{plrs.first.master.number}\e[0m Win!
+      RESULT
+
+      
+      unfocus! :game_set
     end
 
     def show_range x, y
