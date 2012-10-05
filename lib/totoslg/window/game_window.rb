@@ -343,6 +343,10 @@ DOC
 
     def ai_combat_phase player
       player.ai_enumerate_combat do |(x1, y1), (x2, y2)|
+        @board.table[x1, y1].unit.reload
+        @board.table[x2, y2].unit.reload
+        @board.table.modified(x1, y1)
+        @board.table.modified(x2, y2)        
       end
       unfocus! :ai_combat_phase
     end
